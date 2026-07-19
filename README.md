@@ -1,2 +1,93 @@
 # teaching-template
-Basic structure to design courses with Markdown and Quarto.
+
+Course infrastructure as code: Quarto + pixi + Git. One vertical slice
+(lecture 01 and practical 01) built end to end, to be extracted into a reusable
+template once it has survived a real semester.
+
+## Quick start
+
+```bash
+pixi install          # environment, incl. bioconda CLI tools
+pixi run preview      # live-reloading site at localhost:4200
+pixi run test         # run practical solutions against their tests
+pixi run site         # render the website into _site/
+pixi run lms          # render self-contained pages into _lms/
+```
+
+## Layout
+
+```
+_quarto.yml               website config; also controls what is NOT rendered
+_quarto-lms.yml           profile for Moodle delivery (self-contained HTML)
+_course.yml               semester config — the only file to edit on rollover
+pixi.toml / pixi.lock     environment; lockfile MUST be committed
+
+lectures/01-alignment/    index.qmd, slides.qmd (revealjs), notes.qmd
+practicals/01-alignment/  index.qmd, starter/, solution/, data/, tests/
+shared/partials/          content included by both slides and notes
+styles/                   slides.scss, website.scss
+instructor/               retrospectives, plans — never rendered
+scripts/publish.sh        deliberate publish step (site or LMS)
+.github/workflows/        validation only; nothing deploys from CI
+```
+
+## Design decisions
+
+**Slides and notes are separate files sharing partials.** Slides need to be
+sparse; notes need to be complete. Generating one from the other produces bad
+versions of both. Shared definitions live in `shared/partials/` and are included
+by each.
+
+**Nothing deploys automatically.** CI validates (lint, tests, render, leak
+check); publishing is a deliberate `scripts/publish.sh` run. Week 5 goes out
+when week 5 is ready, not when `main` changes. Since the course is distributed
+via Moodle and a self-hosted site, there is no Pages deployment at all.
+
+**Solutions are excluded at build time, not access-controlled.** `_quarto.yml`
+keeps `instructor/**` and `**/solution/**` out of `_site/` and `_lms/`, and CI
+fails if either leaks. But those files are still in the repository — it must
+stay private, and exams belong in a separate repository.
+
+**Tags, not branches, for semesters.** Tag what you actually taught
+(`v2026-winter`); keep improving `main`. Parallel semester branches diverge and
+become four courses to maintain.
+
+## Gotchas discovered while building this
+
+These cost time to find. They are the reason the slice was built before the
+template.
+
+1. **Path resolution differs by context.** `{{< include >}}` resolves from the
+   *project root* (`/shared/partials/x.qmd`); `theme:` resolves relative to the
+   *document* (`../../styles/slides.scss`). Using the wrong one fails at render.
+
+2. **`embed-resources` is incompatible with website projects.** Websites are
+   built around a shared `site_libs/`. The LMS profile overrides
+   `project.type` to `default` to get self-contained output.
+
+3. **Never declare a format at project level that documents don't share.**
+   Putting `revealjs:` in the LMS profile made `notes.qmd` render to both HTML
+   and reveal.js — both writing `notes.html`, so the build failed on a file
+   collision with a confusing error.
+
+4. **Chalkboard and `embed-resources` are mutually exclusive.** Live annotation
+   won; slides are delivered via the hosted site rather than as a single file.
+
+5. **bioconda has no Windows builds.** `pixi.toml` lists only macOS and Linux
+   platforms. Students on Windows need WSL2 — plan the first practical session
+   around this.
+
+## Verified
+
+Site and LMS builds render; `mafft` 7.526 and Biopython 1.87 install from
+bioconda on Python 3.12; all six practical tests pass, including a cross-check
+of the reference Needleman–Wunsch against Biopython's `PairwiseAligner`; ruff
+clean; no solution content in either build.
+
+## Not done yet
+
+- extract shared design into a Quarto **extension** so future modules inherit
+  updates instead of copying them (template repos do not propagate changes)
+- configure `COURSE_REMOTE_HOST` in `scripts/publish.sh`
+- fill in `_course.yml`
+- real content
