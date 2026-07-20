@@ -58,8 +58,8 @@ project:
 lang: en
 
 website:
-  title: "Bioinformatics"
-  description: "BSc Bioinformatics — lecture and practical"
+  title: "Teaching Template"
+  description: "Lecture and practical"
   navbar:
     left:
       - href: index.qmd
