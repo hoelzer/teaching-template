@@ -1,0 +1,59 @@
+name: validate
+
+# Validation only -- nothing is deployed from CI. The course is distributed
+# through Moodle and a self-hosted site, both of which are updated deliberately
+# (see scripts/publish.sh), not on every push.
+#
+# The rule this enforces: whatever is on main must render and its code must run.
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+  workflow_dispatch:
+
+jobs:
+  validate:
+    runs-on: ubuntu-latest
+
+    steps:
+      - uses: actions/checkout@v6
+
+      - name: Set up pixi
+        uses: prefix-dev/setup-pixi@v0.10.0
+        with:
+          # Fails the build if pixi.lock is out of date with pixi.toml,
+          # which is what keeps the environment genuinely reproducible.
+          locked: true
+          cache: true
+
+      - name: Set up Quarto
+        uses: quarto-dev/quarto-actions/setup@v2
+
+      - name: Lint
+        run: pixi run lint
+
+      - name: Test practical solutions
+        run: pixi run test
+
+      - name: Render site
+        run: pixi run site
+
+      - name: Check that no solutions leaked into the build
+        run: |
+          if grep -ril "reference solution" _site/ ; then
+            echo "::error::Solution content found in rendered site"
+            exit 1
+          fi
+          if find _site/ -path '*solution*' -print | grep -q . ; then
+            echo "::error::A path containing 'solution' was rendered into _site/"
+            exit 1
+          fi
+          echo "OK: no solution material in _site/"
+
+      - name: Upload rendered site
+        uses: actions/upload-artifact@v4
+        with:
+          name: site
+          path: _site/
+          retention-days: 14

@@ -84,6 +84,17 @@ bioconda on Python 3.12; all six practical tests pass, including a cross-check
 of the reference Needleman–Wunsch against Biopython's `PairwiseAligner`; ruff
 clean; no solution content in either build.
 
+## Licensing
+
+Dual-licensed, because code and teaching content want different terms:
+
+- **Code** (scripts, workflows, `.py`, `.scss`, config) — MIT, see `LICENSE`
+- **Teaching content** (slides, notes, exercises, figures) — CC BY-SA 4.0,
+  see `LICENSE-CONTENT`
+
+Third-party figures or data reproduced from elsewhere keep their original
+terms and are attributed where used.
+
 ## Not done yet
 
 - extract shared design into a Quarto **extension** so future modules inherit

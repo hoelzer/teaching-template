@@ -1,0 +1,15 @@
+# Single source of truth for everything that changes between semesters.
+# Referenced from .qmd files as e.g. {{< meta course.semester >}} so that
+# rolling the course over to a new term is a one-file edit.
+
+course:
+  title: "Bioinformatics"
+  code: "TODO"
+  semester: "Winter 2026/27"
+  start-date: "2026-10-05"
+  sws-lecture: 2
+  sws-practical: 2
+  institution: "TODO — Hochschule"
+  instructor: "TODO"
+  contact: "TODO"
+  lms-url: "TODO — Moodle course URL"

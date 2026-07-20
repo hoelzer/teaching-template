@@ -1,0 +1,28 @@
+<!--
+Shared partial: included by both lectures/01-alignment/slides.qmd and notes.qmd.
+
+PATH CONVENTION — read this before writing another partial:
+Quarto resolves `{{< include >}}` paths relative to the *including* document,
+not to this file. A relative image path like ../figures/x.png therefore breaks
+as soon as a second document at a different depth includes this partial.
+
+Always use project-root-absolute paths in partials:   /shared/figures/x.png
+Never relative ones:                                  ../figures/x.png
+
+Partials are excluded from `project.render` in _quarto.yml, so this file is
+never rendered as a standalone page.
+-->
+
+A scoring scheme assigns a value to every possible column of an alignment:
+
+| Column        | Score |
+|---------------|-------|
+| Match         | $+1$  |
+| Mismatch      | $-1$  |
+| Gap           | $-2$  |
+
+: Simple scoring scheme {#tbl-scoring}
+
+The score of an alignment is the sum over its columns. Alignment then becomes
+an optimisation problem: among the exponentially many alignments of two
+sequences, find one of maximal score.

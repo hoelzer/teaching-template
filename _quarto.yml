@@ -1,0 +1,54 @@
+project:
+  type: website
+  output-dir: _site
+  render:
+    - "*.qmd"
+    - "lectures/**/*.qmd"
+    - "practicals/**/*.qmd"
+    # Never rendered, never published:
+    - "!instructor/**"
+    - "!**/solution/**"
+    # Partials are included into other documents, not rendered standalone.
+    - "!shared/partials/**"
+
+lang: en
+
+website:
+  title: "Bioinformatics"
+  description: "BSc Bioinformatics — lecture and practical"
+  navbar:
+    left:
+      - href: index.qmd
+        text: Home
+      - href: schedule.qmd
+        text: Schedule
+      - text: Lectures
+        menu:
+          - href: lectures/01-alignment/index.qmd
+            text: "01 — Sequence Alignment"
+      - text: Practicals
+        menu:
+          - href: practicals/01-alignment/index.qmd
+            text: "01 — Pairwise Alignment"
+  page-footer:
+    center: >-
+      Content licensed
+      [CC BY-SA 4.0](https://creativecommons.org/licenses/by-sa/4.0/) ·
+      code MIT.
+
+format:
+  html:
+    theme:
+      - cosmo
+      - styles/website.scss
+    toc: true
+    code-copy: true
+    code-overflow: wrap
+
+# Executed code shares one working directory (the project root), so data paths
+# are stable no matter how deep the .qmd file sits.
+execute:
+  freeze: auto
+
+metadata-files:
+  - _course.yml

@@ -1,0 +1,19 @@
+/*-- scss:defaults --*/
+
+$link-color: #0b6e99 !default;
+$body-color: #1a1a1a !default;
+
+/*-- scss:rules --*/
+
+// Keep the reading column narrow enough to stay readable on a wide monitor.
+main {
+  max-width: 62rem;
+}
+
+// Wide content must scroll inside itself rather than pushing the page.
+.cell-output,
+table {
+  overflow-x: auto;
+  display: block;
+  max-width: 100%;
+}

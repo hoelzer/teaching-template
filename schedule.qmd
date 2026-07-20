@@ -1,0 +1,18 @@
+---
+title: "Schedule"
+---
+
+{{< meta course.semester >}}, starting {{< meta course.start-date >}}.
+
+| Week | Lecture | Practical |
+|------|---------|-----------|
+| 1 | [Sequence Alignment](lectures/01-alignment/index.qmd) | [Pairwise Alignment](practicals/01-alignment/index.qmd) |
+| 2 | TODO | TODO |
+| 3 | TODO | TODO |
+
+: Course schedule {tbl-colwidths="[10,45,45]"}
+
+::: {.callout-note}
+Dates come from `_course.yml`. Rolling the course into a new semester means
+editing that one file, not this table.
+:::

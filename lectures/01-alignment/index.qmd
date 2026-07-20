@@ -1,0 +1,22 @@
+---
+title: "01 — Sequence Alignment"
+---
+
+## Materials
+
+- [Slides](slides.qmd)
+- [Notes](notes.qmd)
+- [Practical 01](../../practicals/01-alignment/index.qmd)
+
+## Learning objectives
+
+By the end of this session you should be able to:
+
+- explain why sequence similarity implies possible homology
+- compute a global alignment by hand with Needleman–Wunsch
+- distinguish global from local alignment and choose appropriately
+- read a scoring matrix and justify a gap penalty
+
+## Preparation
+
+Read Durbin et al., *Biological Sequence Analysis*, sections 2.1–2.3.

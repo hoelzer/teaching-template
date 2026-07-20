@@ -1,0 +1,25 @@
+---
+title: "Bioinformatics"
+---
+
+{{< meta course.semester >}} · {{< meta course.institution >}}
+
+Lecture ({{< meta course.sws-lecture >}} SWS) and practical
+({{< meta course.sws-practical >}} SWS), BSc semester 5.
+
+## Start here
+
+- [Schedule](schedule.qmd) — what happens when
+- [Lecture 01 — Sequence Alignment](lectures/01-alignment/index.qmd)
+- [Practical 01 — Pairwise Alignment](practicals/01-alignment/index.qmd)
+
+## Software
+
+Everything you need is pinned in `pixi.toml`. Install
+[pixi](https://pixi.sh), then run `pixi install` once.
+
+::: {.callout-warning}
+## Windows users
+
+Work inside WSL2. Several bioconda tools have no native Windows build.
+:::

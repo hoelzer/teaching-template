@@ -1,0 +1,38 @@
+/*-- scss:defaults --*/
+
+// Shared slide styling. When this repository becomes a template, this file
+// is a prime candidate to move into a Quarto extension so that all modules
+// inherit design changes instead of each carrying a copy.
+
+$font-family-sans-serif: "Source Sans Pro", "Helvetica Neue", sans-serif !default;
+$presentation-font-size-root: 34px !default;
+$presentation-heading-font-weight: 600 !default;
+
+$body-color: #1a1a1a !default;
+$link-color: #0b6e99 !default;
+
+/*-- scss:rules --*/
+
+.reveal .slides section {
+  text-align: left;
+}
+
+.reveal h1,
+.reveal h2 {
+  text-transform: none;
+  border-bottom: 2px solid rgba(11, 110, 153, 0.25);
+  padding-bottom: 0.2em;
+}
+
+.reveal table {
+  font-size: 0.85em;
+}
+
+.reveal code {
+  font-size: 0.9em;
+}
+
+// Slides tagged {.smaller} carry dense derivations.
+.reveal .smaller {
+  font-size: 0.8em;
+}

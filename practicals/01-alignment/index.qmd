@@ -1,0 +1,43 @@
+---
+title: "Practical 01 — Pairwise Alignment"
+---
+
+## Goal
+
+Implement Needleman–Wunsch yourself, then check it against Biopython.
+
+## Setup
+
+The whole environment — Python, Biopython and the command-line tools — is
+pinned in `pixi.toml`. Install [pixi](https://pixi.sh), then:
+
+```bash
+pixi install
+pixi shell
+```
+
+::: {.callout-warning}
+## Windows
+
+Several of the tools we use are distributed through bioconda, which does not
+build for Windows. Work inside **WSL2**, not native Windows.
+:::
+
+## Tasks
+
+1. Open `starter/alignment.py` and implement `score()`.
+2. Implement `align()` using the recurrence from the lecture.
+3. Run the tests until they pass:
+
+   ```bash
+   cd practicals/01-alignment/starter
+   pytest test_alignment.py -v
+   ```
+
+4. Compare your result against Biopython's `PairwiseAligner`. Do you get the
+   same score? The same alignment? If the alignments differ but the scores
+   match, explain why that is not a bug.
+
+## Handing in
+
+TODO — define the submission route via Moodle.

@@ -1,0 +1,87 @@
+---
+title: "Sequence Alignment"
+subtitle: "Lecture 01"
+format:
+  revealjs:
+    # NOTE: theme paths are resolved relative to THIS document, unlike
+    # `{{< include >}}` paths, which are resolved from the project root.
+    theme: [default, ../../styles/slides.scss]
+    slide-number: true
+    # Live annotation during the lecture. NOTE: chalkboard is incompatible with
+    # `embed-resources`, so slides cannot be made self-contained while this is
+    # on. Slides are therefore delivered via the hosted site (Moodle links to
+    # it), not as a standalone file. If you ever need a single-file deck, either
+    # drop chalkboard or export to PDF with `?print-pdf` in the browser.
+    chalkboard: true
+    incremental: false
+    code-line-numbers: true
+    width: 1280
+    height: 720
+---
+
+## Learning objectives
+
+By the end of this session you should be able to:
+
+- explain why sequence similarity implies possible homology
+- compute a global alignment by hand with Needleman–Wunsch
+- distinguish global from local alignment and choose appropriately
+- read a scoring matrix and justify a gap penalty
+
+## Why align sequences?
+
+Two sequences that look similar may share ancestry.
+
+Similarity is *observed*. Homology is *inferred*.
+
+::: {.fragment}
+The whole field rests on making that inference carefully.
+:::
+
+## Scoring an alignment
+
+{{< include /shared/partials/scoring-scheme.qmd >}}
+
+## Needleman–Wunsch {.smaller}
+
+Fill a matrix $F$ where $F_{i,j}$ is the best score aligning the first $i$ and
+first $j$ characters:
+
+$$
+F_{i,j} = \max
+\begin{cases}
+F_{i-1,j-1} + s(x_i, y_j) & \text{(match/mismatch)} \\
+F_{i-1,j} + d & \text{(gap in } y) \\
+F_{i,j-1} + d & \text{(gap in } x)
+\end{cases}
+$$
+
+::: {.fragment}
+Then trace back from $F_{n,m}$ to recover the alignment itself.
+:::
+
+## In code
+
+```{.python code-line-numbers="|1-2|4-6|8"}
+from Bio import Align
+aligner = Align.PairwiseAligner()
+
+aligner.match_score = 1
+aligner.mismatch_score = -1
+aligner.open_gap_score = -2
+
+alignments = aligner.align("GATTACA", "GCATGCU")
+```
+
+## Global vs. local
+
+| | Global (Needleman–Wunsch) | Local (Smith–Waterman) |
+|---|---|---|
+| Aligns | full length | best sub-region |
+| Use when | sequences comparable in length | domains, motifs, unequal length |
+| Negative scores | kept | clamped to zero |
+
+## Next
+
+Practical 01 — implement Needleman–Wunsch yourself, then compare against
+Biopython.

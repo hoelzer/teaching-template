@@ -1,0 +1,62 @@
+---
+title: "Sequence Alignment — Notes"
+subtitle: "Lecture 01"
+---
+
+These notes are the reference version of the session. The slides are
+deliberately sparser; everything stated in passing during the lecture is
+written out here.
+
+## Why align sequences?
+
+Sequence comparison underlies most of bioinformatics: annotation transfer,
+phylogeny, variant calling, database search. The reasoning runs from an
+observation to an inference:
+
+> Two sequences are **similar** (measurable). They may therefore be
+> **homologous**, i.e. descended from a common ancestor (inferred).
+
+The distinction matters. Similarity is a property of the strings in front of
+you. Homology is a historical claim, and a claim that similarity supports but
+never proves — convergent evolution and chance both produce similarity without
+shared ancestry. Students routinely collapse the two terms, and it is worth
+being pedantic about it early.
+
+## Scoring an alignment
+
+{{< include /shared/partials/scoring-scheme.qmd >}}
+
+The scheme in @tbl-scoring is deliberately crude. Real work uses substitution
+matrices (PAM, BLOSUM) whose entries are log-odds ratios derived from observed
+substitution frequencies in curated alignments, so that chemically conservative
+substitutions cost less than radical ones.
+
+### Gap penalties
+
+A single constant gap penalty treats a run of ten gaps as ten times as costly
+as one. Biologically that is wrong: a single indel event of length ten is far
+more likely than ten independent events. Hence *affine* gap costs, which charge
+more to open a gap than to extend it:
+
+$$
+\gamma(n) = -d - (n-1) \cdot e \qquad \text{with } d > e
+$$
+
+## Needleman–Wunsch
+
+The recurrence given on the slides is a dynamic programming formulation: the
+optimal alignment of two prefixes is built from optimal alignments of shorter
+prefixes. Two things are worth stressing:
+
+1. **Initialisation encodes the algorithm's intent.** For global alignment the
+   first row and column are filled with cumulative gap penalties, because a
+   prefix aligned against nothing *is* a run of gaps. Smith–Waterman
+   initialises to zero instead — that single change is what makes it local.
+2. **The matrix gives the score; the traceback gives the alignment.** They are
+   separate steps, and the traceback may be ambiguous when several predecessors
+   tie. Multiple optimal alignments are normal, not a bug.
+
+## Further reading
+
+- Durbin et al., *Biological Sequence Analysis*, ch. 2
+- Needleman & Wunsch (1970), *J Mol Biol* 48(3):443–453

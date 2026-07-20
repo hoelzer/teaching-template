@@ -1,0 +1,30 @@
+# Quarto profile for Moodle delivery.
+#
+#   quarto render --profile lms      (or: pixi run lms)
+#
+# Produces one standalone .html per page, with images, CSS and JS inlined, so
+# a single file can be uploaded to Moodle as an ordinary file resource and
+# still work offline.
+#
+# WHY project type is overridden to `default`:
+# `embed-resources` is incompatible with a *website* project -- websites are
+# built around a shared site_libs/ directory, and forcing embedding there makes
+# Quarto fail while moving output files. Rendering as a plain document
+# collection instead is what makes self-contained output possible. The
+# trade-off is no navbar and no search in the LMS build, which is correct
+# anyway: Moodle provides the navigation.
+
+project:
+  type: default
+  output-dir: _lms
+
+format:
+  html:
+    embed-resources: true
+    toc: true
+    number-sections: true
+# NOTE: do NOT add a `revealjs:` block here. A format declared at project level
+# applies to every document that does not declare its own, so notes.qmd would
+# render to both html and revealjs -- both of which write notes.html, and the
+# second move fails. Slides set `embed-resources` in their own frontmatter
+# instead.

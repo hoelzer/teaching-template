@@ -1,0 +1,33 @@
+# Generated output — never committed, always rebuilt.
+_site/
+_lms/
+.quarto/
+*_files/
+
+# Quarto execution cache
+/.quarto/
+_freeze/
+
+# Environments
+# pixi is the project standard; the rest catch hand-rolled envs.
+.pixi/
+.venv/
+venv/
+env/
+
+# Python
+__pycache__/
+*.py[cod]
+.pytest_cache/
+.ruff_cache/
+.ipynb_checkpoints/
+
+# Editors
+.vscode/
+.idea/
+
+# OS
+.DS_Store
+Thumbs.db
+
+**/*.quarto_ipynb
