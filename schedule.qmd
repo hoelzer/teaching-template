@@ -4,10 +4,13 @@ title: "Schedule"
 
 {{< meta course.semester >}}, starting {{< meta course.start-date >}}.
 
+Linked sessions are available now. Unlinked ones are listed so you can see
+what is coming; they go online in the week they are taught.
+
 | Week | Lecture | Practical |
 |------|---------|-----------|
 | 1 | [Sequence Alignment](lectures/01-alignment/index.qmd) | [Pairwise Alignment](practicals/01-alignment/index.qmd) |
-| 2 | TODO | TODO |
+| 2 | Sequence Databases | Database Searching |
 | 3 | TODO | TODO |
 
 : Course schedule {tbl-colwidths="[10,45,45]"}
@@ -16,3 +19,11 @@ title: "Schedule"
 Dates come from `_course.yml`. Rolling the course into a new semester means
 editing that one file, not this table.
 :::
+
+<!--
+MAINTENANCE: only link a session once it is in the render allowlist in
+_quarto.yml. Linking a held-back session produces a 404, which
+scripts/check-links.sh will fail on in CI. Run ./scripts/release.sh status
+to see what is currently live.
+-->
+

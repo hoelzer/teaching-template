@@ -1,0 +1,16 @@
+---
+title: "02 — Sequence Databases"
+---
+
+::: {.callout-note}
+This session is a placeholder demonstrating the release mechanism. It is
+**not** in the allowlist in `_quarto.yml`, so it is not published.
+:::
+
+## Materials
+
+- [Slides](slides.qmd)
+
+## Learning objectives
+
+- TODO

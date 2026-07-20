@@ -40,5 +40,10 @@ lms = "./scripts/publish.sh lms"
 
 preview = "quarto preview"
 
-# Verify every local link in both builds resolves. Render first.
+# Which sessions are published, which are held back.
+status = "./scripts/release.sh status"
+
+# Verify both builds. Render first (`pixi run site && pixi run lms`).
 check-links = "./scripts/check-links.sh _site && ./scripts/check-links.sh _lms"
+check-output = "./scripts/check-output.sh _site && ./scripts/check-output.sh _lms"
+check = { depends-on = ["check-links", "check-output"] }

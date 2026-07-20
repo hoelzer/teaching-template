@@ -35,6 +35,19 @@ while IFS= read -r page; do
     target="${link%%#*}"            # strip any fragment
     [[ -z "$target" ]] && continue  # pure in-page anchor
 
+    # A .qmd link must never survive into a build. Two ways it happens, both
+    # bad, and neither is caught by an existence test:
+    #   - the LMS build does not rewrite .qmd -> .html (see publish.sh)
+    #   - linking to a session held back from the render allowlist makes
+    #     Quarto copy its raw source into the output as a resource, so the
+    #     file DOES exist and students get served markdown
+    if [[ "$target" == *.qmd ]]; then
+      echo "QMD LINK: $page -> $link"
+      echo "          (a held-back session, or an unrewritten LMS link)"
+      broken=$((broken + 1))
+      continue
+    fi
+
     if [[ ! -e "$page_dir/$target" ]]; then
       echo "BROKEN: $page -> $link"
       broken=$((broken + 1))

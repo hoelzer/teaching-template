@@ -5,7 +5,7 @@ title: "Bioinformatics"
 {{< meta course.semester >}} · {{< meta course.institution >}}
 
 Lecture ({{< meta course.sws-lecture >}} SWS) and practical
-({{< meta course.sws-practical >}} SWS), BSc semester 5.
+({{< meta course.sws-practical >}} SWS), {{< meta course.audience >}}.
 
 ## Start here
 

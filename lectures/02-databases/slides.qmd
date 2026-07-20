@@ -1,0 +1,23 @@
+---
+title: "Sequence Databases"
+subtitle: "Lecture 02"
+format:
+  revealjs:
+    theme: [default, ../../styles/slides.scss]
+    slide-number: true
+    chalkboard: true
+    code-line-numbers: true
+    width: 1280
+    height: 720
+---
+
+## Placeholder
+
+Unreleased session, used to verify that the allowlist in `_quarto.yml`
+actually keeps unpublished sessions out of the build.
+
+## TODO
+
+- GenBank, ENA, UniProt
+- accessions and versioning
+- what a database record does and does not guarantee

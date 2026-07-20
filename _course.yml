@@ -4,6 +4,7 @@
 
 course:
   title: "Bioinformatics"
+  audience: "BSc Semester 5"
   code: "MT.1.257"
   semester: "Winter 2026/27"
   start-date: "2026-10-05"

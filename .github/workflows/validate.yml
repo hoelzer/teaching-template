@@ -36,33 +36,26 @@ jobs:
       - name: Test practical solutions
         run: pixi run test
 
-      - name: Render site
-        run: pixi run site
-
-      - name: Check internal links (site)
-        run: ./scripts/check-links.sh _site
-
       # Invoke the same pixi tasks a person would run locally. CI previously
       # called publish.sh directly while `pixi run lms` called quarto directly,
       # so a bug in the task definition passed CI and broke the real workflow.
-      - name: Render and check LMS build
+      - name: Render both builds
         run: |
+          pixi run site
           pixi run lms
-          ./scripts/check-links.sh _lms
 
-      - name: Check that no solutions leaked into the build
-        run: |
-          for dir in _site _lms ; do
-            if grep -ril "reference solution" "$dir/" ; then
-              echo "::error::Solution content found in $dir/"
-              exit 1
-            fi
-            if find "$dir/" -path '*solution*' -print | grep -q . ; then
-              echo "::error::A path containing 'solution' was rendered into $dir/"
-              exit 1
-            fi
-          done
-          echo "OK: no solution material in _site/"
+      - name: Show release status
+        run: pixi run status
+
+      # Broken links, and .qmd links -- which mean either an unrewritten LMS
+      # link or a link to a session held back from the render allowlist.
+      - name: Check internal links
+        run: pixi run check-links
+
+      # Solutions, instructor material, and raw source files copied in as
+      # resources -- the last happens when a page links to a held-back session.
+      - name: Check published output
+        run: pixi run check-output
 
       - name: Upload rendered site
         uses: actions/upload-artifact@v4

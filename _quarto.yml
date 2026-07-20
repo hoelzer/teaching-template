@@ -2,10 +2,38 @@ project:
   type: website
   output-dir: _site
   render:
-    - "*.qmd"
-    - "lectures/**/*.qmd"
-    - "practicals/**/*.qmd"
-    # Never rendered, never published:
+    # ---------------------------------------------------------------------
+    # RELEASE ALLOWLIST
+    #
+    # Only what is listed here is rendered and published. A session that is
+    # not listed does not exist on the site -- no page, no URL, nothing to
+    # guess. This is an allowlist on purpose: forgetting to add a session
+    # means it is quietly not published (harmless, obvious, fixable), whereas
+    # forgetting to exclude one would publish unfinished material.
+    #
+    # Quarto's `draft:` feature is NOT used, because draft-mode `unlinked`
+    # still serves the full page to anyone who guesses the URL, and `gone`
+    # publishes an empty page. Neither is access control.
+    #
+    # To release a session: uncomment its two lines, then
+    #   ./scripts/release.sh status     # confirm what is live
+    #   ./scripts/publish.sh site
+    # ---------------------------------------------------------------------
+
+    # Always rendered: site-level pages.
+    - "index.qmd"
+    - "schedule.qmd"
+
+    # Released sessions.
+    - "lectures/01-alignment/*.qmd"
+    - "practicals/01-alignment/*.qmd"
+
+    # Not yet released -- uncomment to publish.
+    # - "lectures/02-databases/*.qmd"
+    # - "practicals/02-databases/*.qmd"
+
+    # Belt and braces. The allowlist above already excludes these; these
+    # lines make it explicit, and CI fails if either ever reaches a build.
     - "!instructor/**"
     - "!**/solution/**"
     # Partials are included into other documents, not rendered standalone.
