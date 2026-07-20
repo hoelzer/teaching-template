@@ -39,6 +39,21 @@ project:
     # Partials are included into other documents, not rendered standalone.
     - "!shared/partials/**"
 
+  # Copied verbatim into the output. MUST stay outside the render list above:
+  # putting it in the middle silently turns every following entry into a
+  # resource, so sessions are copied as raw .qmd instead of being rendered.
+  #
+  # 404.html has to exist at the top level or Cloudflare Pages treats the
+  # deployment as a single-page application and serves / for every unmatched
+  # path -- returning the home page, with status 200, for an unreleased session.
+  #
+  # The leading slash anchors this to the project root. A bare "404.html" is
+  # a recursive glob: it matched a jupyter template inside .pixi/ and dragged
+  # part of the environment into the build, and pulled _site/404.html into
+  # the LMS output.
+  resources:
+    - "/404.html"
+
 lang: en
 
 website:

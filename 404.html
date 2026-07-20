@@ -1,0 +1,74 @@
+<!doctype html>
+<!--
+  Served by Cloudflare Pages for any path that does not exist.
+
+  Two reasons this is hand-written rather than generated from a 404.qmd:
+
+  1. Without a top-level 404.html, Pages assumes the deployment is a
+     single-page application and serves / for every unmatched path -- so a
+     held-back session returned the home page with status 200 instead of a
+     404.
+  2. Pages serves the closest 404.html but the browser URL stays at the
+     requested depth, so a page using relative asset paths (as every Quarto
+     page does) would load unstyled. Everything here is inline: no CSS, no
+     images, no JS, nothing to resolve.
+
+  Copied verbatim into _site/ via `project.resources` in _quarto.yml.
+-->
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>Not found</title>
+    <style>
+      :root { color-scheme: light dark; }
+      body {
+        font-family: system-ui, -apple-system, "Segoe UI", sans-serif;
+        line-height: 1.6;
+        max-width: 34rem;
+        margin: 0 auto;
+        padding: 4rem 1.5rem;
+        color: #1a1a1a;
+        background: #fff;
+      }
+      h1 { font-size: 1.5rem; margin-bottom: 0.5rem; }
+      p { margin: 0 0 1rem; }
+      ul { padding-left: 1.2rem; }
+      li { margin-bottom: 0.3rem; }
+      a { color: #0b6e99; }
+      .hint {
+        margin-top: 2rem;
+        padding-top: 1rem;
+        border-top: 1px solid rgba(128, 128, 128, 0.3);
+        font-size: 0.9rem;
+        color: #555;
+      }
+      @media (prefers-color-scheme: dark) {
+        body { color: #e8e8e8; background: #1a1a1a; }
+        a { color: #6db3d6; }
+        .hint { color: #aaa; }
+      }
+    </style>
+  </head>
+  <body>
+    <h1>Page not found</h1>
+
+    <img src="https://i.imgur.com/s85Xa.png" alt="An picture of a dead link">
+
+    <p>
+      There is nothing at this address. The most likely reason is that the
+      session has not been published yet — material goes online in the week it
+      is taught.
+    </p>
+
+    <ul>
+      <li><a href="/">Course home</a></li>
+      <li><a href="/schedule.html">Schedule</a> — what is coming when</li>
+    </ul>
+
+    <p class="hint">
+      If a link from the course page or from Moodle brought you here, that is a
+      mistake on my side — please let me know.
+    </p>
+  </body>
+</html>
