@@ -33,7 +33,9 @@ scripts/publish.sh        deliberate publish step (site or LMS)
 scripts/release.sh        show which sessions are published
 scripts/check-links.sh    every local link resolves; no .qmd links survive
 scripts/check-output.sh   no solutions, instructor material or source files
-.github/workflows/        validation only; nothing deploys from CI
+cloudflare/_worker.js     basic auth in front of the site; fails closed
+cloudflare/worker.test.mjs  auth tests (plain node, no dependencies)
+.github/workflows/        validate every push; deploy main to Cloudflare
 ```
 
 ## Design decisions
@@ -43,10 +45,11 @@ sparse; notes need to be complete. Generating one from the other produces bad
 versions of both. Shared definitions live in `shared/partials/` and are included
 by each.
 
-**Nothing deploys automatically.** CI validates (lint, tests, render, leak
-check); publishing is a deliberate `scripts/publish.sh` run. Week 5 goes out
-when week 5 is ready, not when `main` changes. Since the course is distributed
-via Moodle and a self-hosted site, there is no Pages deployment at all.
+**`main` deploys continuously; sessions are released deliberately.** These are
+separate gates. Every push to `main` that passes validation deploys to
+Cloudflare Pages, so a typo fix reaches students in minutes. But a *session*
+only becomes visible when you add it to the render allowlist — so continuous
+deployment never publishes something before you meant it to.
 
 **Solutions are excluded at build time, not access-controlled.** `_quarto.yml`
 keeps `instructor/**` and `**/solution/**` out of `_site/` and `_lms/`, and CI
@@ -66,12 +69,50 @@ and the password, not copies of the material. Fixing an error means one
 Weekly loop:
 
 ```bash
-pixi run preview            # write, check locally
-pixi run status             # what is currently published
+pixi run preview   # write, check locally
+pixi run status    # what is currently published
 # release a session: uncomment its lines in the render allowlist in _quarto.yml
-pixi run check              # links + output guards
-./scripts/publish.sh site   # render and rsync
+pixi run check     # links + output guards (CI runs these too)
+git push           # validation, then deploy to Cloudflare Pages
 ```
+
+`scripts/publish.sh site` still exists for rsync to a self-hosted server; it is
+the fallback path, not the normal one.
+
+### Hosting: Cloudflare Pages behind a password
+
+The site is deployed by CI and protected by HTTP basic auth, so it is a
+delimited group of participants rather than open publication — which matters
+for teaching material containing third-party figures (§60a UrhG).
+
+GitHub Pages was ruled out: it cannot be password-protected. Access-controlled
+Pages requires Enterprise Cloud and grants access to *people with repository
+read access*, which would hand students the unreleased content. Cloudflare
+Access was ruled out too — its free tier is 50 seats, and four modules over
+several years is hundreds of students.
+
+Auth is a `_worker.js` copied into the deployed directory, which intercepts
+every request including static assets. It **fails closed**: if the credentials
+are unset, it returns 503 rather than serving the site.
+
+One-time setup:
+
+1. Create the Pages project (it must exist before the first CI deploy):
+   `wrangler pages project create <name> --production-branch=main`
+2. In the Cloudflare dashboard, set these as **encrypted environment variables
+   on the Pages project** (Production), not as GitHub secrets:
+   - `COURSE_USER` — e.g. `student`
+   - `COURSE_PASSWORD` — the shared password you post in Moodle (use ASCII)
+3. Create an API token with the **Cloudflare Pages: Edit** permission.
+4. In the GitHub repository settings add:
+   - secret `CLOUDFLARE_API_TOKEN`
+   - secret `CLOUDFLARE_ACCOUNT_ID`
+   - variable `CLOUDFLARE_PROJECT_NAME`
+
+CI fails with a readable message if any of step 4 is missing.
+
+To change the password mid-semester, edit the Pages environment variable and
+redeploy — no repository change needed.
 
 **Releasing is an allowlist, not a draft flag.** Only sessions listed in
 `project.render` in `_quarto.yml` are rendered; everything else has no page and

@@ -1,10 +1,14 @@
 name: validate
 
-# Validation only -- nothing is deployed from CI. The course is distributed
-# through Moodle and a self-hosted site, both of which are updated deliberately
-# (see scripts/publish.sh), not on every push.
+# Validate every push and pull request; deploy main to Cloudflare Pages.
 #
-# The rule this enforces: whatever is on main must render and its code must run.
+# Deploying on every push to main is safe because publishing a SESSION is a
+# separate, deliberate act: only sessions listed in the render allowlist in
+# _quarto.yml reach _site at all. So main deploys continuously, while course
+# content is released when you decide to release it.
+#
+# The rule this enforces: whatever is on main must render, its code must run,
+# and it must contain nothing students should not see.
 
 on:
   push:
@@ -32,6 +36,11 @@ jobs:
 
       - name: Lint
         run: pixi run lint
+
+      # Runs on node from the runner image; no dependencies. Auth code that is
+      # never exercised is how a site ends up publicly readable unnoticed.
+      - name: Test auth worker
+        run: node cloudflare/worker.test.mjs
 
       - name: Test practical solutions
         run: pixi run test
@@ -63,3 +72,56 @@ jobs:
           name: site
           path: _site/
           retention-days: 14
+
+  deploy:
+    needs: validate
+    # Only main, and never from a pull request -- a PR from a fork must not be
+    # able to publish, nor to read the Cloudflare token.
+    if: github.event_name != 'pull_request' && github.ref == 'refs/heads/main'
+    runs-on: ubuntu-latest
+
+    steps:
+      - uses: actions/checkout@v6
+
+      # Deploy exactly the bytes that were validated, rather than re-rendering
+      # and hoping the second render matches the first.
+      - name: Download validated site
+        uses: actions/download-artifact@v4
+        with:
+          name: site
+          path: _site
+
+      # Cloudflare Pages "advanced mode": _worker.js at the root of the
+      # uploaded directory intercepts every request, including static assets.
+      - name: Add auth worker
+        run: |
+          cp cloudflare/_worker.js _site/_worker.js
+          test -f _site/_worker.js || { echo "::error::worker not copied"; exit 1; }
+
+      # Fail with a readable message rather than a confusing wrangler error.
+      - name: Check deploy configuration
+        env:
+          PROJECT: ${{ vars.CLOUDFLARE_PROJECT_NAME }}
+          TOKEN: ${{ secrets.CLOUDFLARE_API_TOKEN }}
+          ACCOUNT: ${{ secrets.CLOUDFLARE_ACCOUNT_ID }}
+        run: |
+          missing=""
+          [ -n "$PROJECT" ] || missing="$missing vars.CLOUDFLARE_PROJECT_NAME"
+          [ -n "$TOKEN" ]   || missing="$missing secrets.CLOUDFLARE_API_TOKEN"
+          [ -n "$ACCOUNT" ] || missing="$missing secrets.CLOUDFLARE_ACCOUNT_ID"
+          if [ -n "$missing" ]; then
+            echo "::error::Missing repository configuration:$missing"
+            echo "See the Cloudflare section of README.md."
+            exit 1
+          fi
+          echo "OK: deploy configuration present"
+
+      - name: Deploy to Cloudflare Pages
+        uses: cloudflare/wrangler-action@v3
+        with:
+          apiToken: ${{ secrets.CLOUDFLARE_API_TOKEN }}
+          accountId: ${{ secrets.CLOUDFLARE_ACCOUNT_ID }}
+          command: >-
+            pages deploy _site
+            --project-name=${{ vars.CLOUDFLARE_PROJECT_NAME }}
+            --branch=main
