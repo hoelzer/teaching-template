@@ -28,7 +28,7 @@ there is no "old version" circulating by email. When in doubt, reload the page
 rather than trusting a copy you saved earlier.
 
 Material is published **as we go**: a session appears in the week we cover it,
-and the practicals start in the second half of the semester. The
+and the practicals are posted as soon as we begin working on them. The
 [schedule](schedule.qmd) shows what is coming; a session you cannot open yet
 simply has not been released.
 
@@ -55,19 +55,19 @@ PDF, because it would only go out of date:
 
 ## Notes
 
-Each lecture also has a **Notes** page. The slides are deliberately sparse — the
+Most lectures also have a **Notes** page. The slides are deliberately sparse — the
 notes are the complete written version, with the full explanations, definitions
 and references. Use the slides to follow along in class and the notes to revise
 afterwards.
 
 ## Practicals
 
-The practicals are small, self-contained programming tasks. Each one comes with
+The practicals are usually small, self-contained programming tasks. Each one comes with
 starter code and tests you run yourself, so you always know when a task is done.
 
 The software you need is pinned so that it installs the same way for everyone
-and still works in three years. Install [pixi](https://pixi.sh), then run
-`pixi install` once in the practical repository.
+and still works in three years. For example, we can use [pixi](https://pixi.sh) for handling software dependencies. Install [pixi](https://pixi.sh), then run
+`pixi install` once in the practical repository. We might also use other tools for installing software and handling dependencies such as [Mamba](https://mamba.readthedocs.io/en/latest/) or [Docker](https://www.docker.com/products/docker-desktop/).
 
 ::: {.callout-warning}
 ## Windows

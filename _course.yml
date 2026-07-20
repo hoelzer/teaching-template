@@ -3,7 +3,7 @@
 # rolling the course over to a new term is a one-file edit.
 
 course:
-  title: "Bioinformatics"
+  title: "Teaching Template"
   audience: "BSc Semester 5"
   code: "MT.1.257"
   semester: "Winter 2026/27"
