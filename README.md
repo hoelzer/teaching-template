@@ -62,9 +62,9 @@ become four courses to maintain.
 
 ## Publishing and releasing
 
-Content lives in exactly one place: the self-hosted site. Moodle holds the URL
-and the password, not copies of the material. Fixing an error means one
-`publish.sh site` and every student has it — there is no second copy to drift.
+Content lives in exactly one place: the hosted site. Moodle holds the URL and
+the password, not copies of the material. Fixing an error means one push, and
+every student has it — there is no second copy to drift out of date.
 
 Weekly loop:
 
@@ -95,21 +95,108 @@ Auth is a `_worker.js` copied into the deployed directory, which intercepts
 every request including static assets. It **fails closed**: if the credentials
 are unset, it returns 503 rather than serving the site.
 
-One-time setup:
+There is **no GitHub–Cloudflare integration**. CI renders the site and uploads
+it with `wrangler` (Direct Upload), so Cloudflare never has access to the
+repository. Consequences worth knowing: the repository can stay private without
+any special plan, and transferring or renaming it does not touch deployment.
 
-1. Create the Pages project (it must exist before the first CI deploy):
-   `wrangler pages project create <name> --production-branch=main`
-2. In the Cloudflare dashboard, set these as **encrypted environment variables
-   on the Pages project** (Production), not as GitHub secrets:
-   - `COURSE_USER` — e.g. `student`
-   - `COURSE_PASSWORD` — the shared password you post in Moodle (use ASCII)
-3. Create an API token with the **Cloudflare Pages: Edit** permission.
-4. In the GitHub repository settings add:
-   - secret `CLOUDFLARE_API_TOKEN`
-   - secret `CLOUDFLARE_ACCOUNT_ID`
-   - variable `CLOUDFLARE_PROJECT_NAME`
+### Setting up hosting for a module
 
-CI fails with a readable message if any of step 4 is missing.
+One Pages project per module, because each module is its own repository and its
+own site. The free tier allows 100 projects.
+
+| Step | How often |
+|---|---|
+| `wrangler login` | once, ever |
+| API token (Pages: Edit) | once — works for every project in the account |
+| Account ID | once — same value everywhere |
+| Create Pages project | per module |
+| `COURSE_USER` / `COURSE_PASSWORD` | per module |
+| Custom domain | per module |
+| GitHub secrets + variable | per module |
+
+Organization-level secrets do not help: on GitHub Free they are not readable
+from private repositories.
+
+**Naming.** Keep repository name, Pages project name and subdomain label
+identical, so there is nothing to map:
+
+```
+repo:    hoelzer-science/bioinformatics
+project: bioinformatics
+domain:  bioinformatics.hoelzer.science
+```
+
+**1. Create the Pages project.** It must exist before the first CI deploy.
+
+```bash
+npx wrangler login
+npx wrangler pages project create <name> --production-branch=main
+npx wrangler whoami          # prints the Account ID
+```
+
+**2. Set the credentials on the Pages project.** Cloudflare dashboard →
+Workers & Pages → project → Settings → Environment variables → **Production**,
+as encrypted secrets:
+
+- `COURSE_USER` — e.g. `student`
+- `COURSE_PASSWORD` — the shared password, posted in Moodle (ASCII only;
+  `atob()` decodes bytes, so non-ASCII will not round-trip reliably)
+
+These are **Cloudflare** variables read by the worker at runtime, not GitHub
+secrets. Putting them in the wrong place is the most common setup mistake.
+
+Preview deployments use a separate environment. If you leave Preview unset,
+preview URLs return 503 — the worker failing closed, which is the safe
+default. Set the same two variables on Preview only if you want previews
+usable.
+
+**3. Create an API token.** Cloudflare dashboard → My Profile → API Tokens →
+Create Token → Custom token → permission **Account → Cloudflare Pages → Edit**.
+Copy it immediately; it is shown once. The same token works for all modules.
+
+**4. Configure the GitHub repository.** Settings → Secrets and variables →
+Actions:
+
+- Secrets: `CLOUDFLARE_API_TOKEN`, `CLOUDFLARE_ACCOUNT_ID`
+- Variables: `CLOUDFLARE_PROJECT_NAME`
+
+The project name is a variable, not a secret — it is not sensitive, and having
+it visible in logs makes deploy failures readable. CI fails with an explicit
+message naming anything missing.
+
+Note that repository secrets do **not** survive a repository transfer. Move a
+repository between accounts or organizations *before* configuring these.
+
+**5. Add the custom domain.** Workers & Pages → project → **Custom domains** →
+*Set up a custom domain*.
+
+Do **not** create the DNS record by hand. Cloudflare creates it, binds the
+hostname to the project, and issues the certificate. A manually created record
+does none of that — and an `A` record is wrong regardless, since Pages has no
+static IP. (By hand it would be a proxied `CNAME` to `<project>.pages.dev`, but
+the hostname would still not be bound to the project.)
+
+Keep subdomains **one level deep**. Universal SSL covers the apex and
+`*.example.com`, but not `*.teaching.example.com`; two-level subdomains need
+the paid Advanced Certificate Manager.
+
+A brief SSL warning right after adding the domain is normal while the
+certificate issues.
+
+### Verifying a new deployment
+
+Two checks, both by hand, because a routing mistake here publishes the course:
+
+1. A private-window visit to the site prompts for the password.
+2. A direct asset URL — e.g. `/lectures/01-alignment/slides.html` — **also**
+   prompts rather than loading.
+
+If the first prompts but the second loads, the worker is not intercepting asset
+requests and the site is effectively public.
+
+The `<project>.pages.dev` URL keeps working alongside the custom domain and is
+protected by the same worker.
 
 To change the password mid-semester, edit the Pages environment variable and
 redeploy — no repository change needed.
@@ -169,12 +256,22 @@ template.
    platforms. Students on Windows need WSL2 — plan the first practical session
    around this.
 
+8. **GitHub Pages cannot be password-protected.** Access-controlled Pages needs
+   Enterprise Cloud, and grants access to people with *repository read access* —
+   which would hand students the unreleased content. Cloudflare Access is 50
+   seats on the free tier, far too few across modules and years. Hence a worker
+   doing basic auth.
+
 ## Verified
 
 Site and LMS builds render; `mafft` 7.526 and Biopython 1.87 install from
 bioconda on Python 3.12; all six practical tests pass, including a cross-check
-of the reference Needleman–Wunsch against Biopython's `PairwiseAligner`; ruff
+of the reference Needleman–Wunsch against Biopython's `PairwiseAligner`; auth
+worker passes 15 cases covering rejects, fail-closed and happy paths; ruff
 clean; no solution content in either build.
+
+Not verified locally: the Cloudflare deploy itself, which needs an account and
+API token. Everything up to the `wrangler` call is exercised in CI.
 
 ## Licensing
 
@@ -191,6 +288,8 @@ terms and are attributed where used.
 
 - extract shared design into a Quarto **extension** so future modules inherit
   updates instead of copying them (template repos do not propagate changes)
-- configure `COURSE_REMOTE_HOST` in `scripts/publish.sh`
-- fill in `_course.yml`
+- fill in `_course.yml` (course URL and Moodle link once they exist)
 - real content
+
+Optional: `COURSE_REMOTE_HOST` in `scripts/publish.sh`, only if you ever want
+the rsync fallback to a self-hosted server instead of Cloudflare.

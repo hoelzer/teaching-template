@@ -22,6 +22,12 @@ __pycache__/
 .ruff_cache/
 .ipynb_checkpoints/
 
+# Tooling caches that contain account identifiers or local state.
+# .wrangler/cache/wrangler-account.json holds the Cloudflare account ID.
+.wrangler/
+.nextflow/
+.nextflow.log*
+
 # Editors
 .vscode/
 .idea/
