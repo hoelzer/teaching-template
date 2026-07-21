@@ -29,10 +29,16 @@ rejected for that reason.
 ## High-level architecture
 
 ```
-teaching-hub        public    public front door             teaching.hoelzer.science
-teaching-template   public    this repo — course skeleton   teaching-template.hoelzer.science (401)
-<module>            private   actual courses                <module>.hoelzer.science (401)
+teaching-hub          public    public front door             teaching.hoelzer.science
+teaching-template     public    this repo — course skeleton   teaching-template.hoelzer.science (401)
+<module>              private   actual courses                <module>.hoelzer.science (401)
+<shared-prerequisite> public    material every module needs   (planned)
 ```
+
+The fourth kind exists because cherry-pick sync moves **infrastructure only** — content
+copied into each module drifts. Material every module needs and none owns (first case: a
+Linux/bash crash course) gets its own public repo instead, and modules **link** to it from
+`guide.qmd` rather than carrying a copy. Do not add such material to this template.
 
 Sites are Quarto → Cloudflare Pages (Direct Upload from CI), fronted by
 `cloudflare/_worker.js` doing HTTP basic auth that **fails closed**. There is no
