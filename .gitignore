@@ -28,6 +28,12 @@ __pycache__/
 .nextflow/
 .nextflow.log*
 
+# Working notes for Claude Code sessions. Deliberately NOT committed: this
+# repository is public, and these files record status candidly (see the
+# publishing constraint in CLAUDE.md). CLAUDE.md itself is committed.
+NEXT.md
+docs/sessions/
+
 # Editors
 .vscode/
 .idea/
