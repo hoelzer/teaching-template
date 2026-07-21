@@ -3,15 +3,19 @@ title: "How this course works"
 ---
 
 Everything for this course lives on **this website**: the schedule, the slides,
-the written notes, and the practicals. Moodle is used only for the things a
-website cannot do — the login password, announcements, and handing in work.
+the written notes, and the practicals. {{< meta course.lms >}} is used only for
+the things a website cannot do — the login password, announcements, and handing
+in work.
 
 Read this page once at the start of the semester. It does not change.
+
+*Why the course is built this way is written up separately, at
+[teaching.hoelzer.science](https://teaching.hoelzer.science/philosophy).*
 
 ## Getting in
 
 The site is password-protected. There is one shared login for the whole course,
-and the username and password are posted in **Moodle**.
+and the username and password are posted in **{{< meta course.lms >}}**.
 
 Your browser will remember it, so you normally type it only once.
 
@@ -22,10 +26,9 @@ teaching only because access is limited to enrolled participants.
 
 ## The website is always current
 
-Because everything is in one place, it is always up to date. If I fix a mistake
-in a slide or a practical, the correction is live for everyone immediately —
-there is no "old version" circulating by email. When in doubt, reload the page
-rather than trusting a copy you saved earlier.
+If I fix a mistake in a slide or a practical, the correction is live for
+everyone immediately. When in doubt, reload the page rather than trusting a copy
+you saved earlier.
 
 Material is published **as we go**: a session appears in the week we cover it,
 and the practicals are posted as soon as we begin working on them. The
@@ -34,8 +37,7 @@ simply has not been released.
 
 ## Slides
 
-The slides are **interactive HTML**, not PowerPoint or PDF. A few things worth
-knowing:
+The slides are **interactive HTML**, not PowerPoint or PDF:
 
 - Navigate with the **arrow keys**, or swipe on a tablet.
 - Press <kbd>O</kbd> for an overview of all slides; <kbd>Esc</kbd> to leave it.
@@ -44,8 +46,8 @@ knowing:
 
 ### If you want PDF slides
 
-You can make a PDF yourself from any slide deck — I do not maintain a separate
-PDF, because it would only go out of date:
+There is no separate PDF to download, but you can make one yourself from any
+deck:
 
 1. Open the slides in **Chrome or Edge** (the export is most reliable there).
 2. Open the slide menu (the icon at the **bottom-left**) → **Tools** →
@@ -55,19 +57,23 @@ PDF, because it would only go out of date:
 
 ## Notes
 
-Most lectures also have a **Notes** page. The slides are deliberately sparse — the
-notes are the complete written version, with the full explanations, definitions
-and references. Use the slides to follow along in class and the notes to revise
-afterwards.
+Most lectures also have a **Notes** page. The slides are deliberately sparse —
+the notes are the complete written version, with the full explanations,
+definitions and references. Use the slides to follow along in class and the
+notes to revise afterwards.
 
 ## Practicals
 
-The practicals are usually small, self-contained programming tasks. Each one comes with
-starter code and tests you run yourself, so you always know when a task is done.
+The practicals are usually small, self-contained programming tasks. Each one
+comes with starter code and tests you run yourself, so you always know when a
+task is done.
 
-The software you need is pinned so that it installs the same way for everyone
-and still works in three years. For example, we can use [pixi](https://pixi.sh) for handling software dependencies. Install [pixi](https://pixi.sh), then run
-`pixi install` once in the practical repository. We might also use other tools for installing software and handling dependencies such as [Mamba](https://mamba.readthedocs.io/en/latest/) or [Docker](https://www.docker.com/products/docker-desktop/).
+The software you need is pinned, so it installs the same way for everyone. We
+can use [pixi](https://pixi.sh): install it, then run `pixi install` once in the
+practical repository. We might also use other tools for installing software and
+handling dependencies, such as
+[Mamba](https://mamba.readthedocs.io/en/latest/) or
+[Docker](https://www.docker.com/products/docker-desktop/).
 
 ::: {.callout-warning}
 ## Windows
@@ -82,9 +88,9 @@ in the first practical — do not worry about it before then.
 | You want… | Look in… |
 |---|---|
 | Slides, notes, practicals, schedule | this website |
-| The login password | Moodle |
-| Announcements and deadlines | Moodle |
-| Handing in practical work | Moodle |
+| The login password | {{< meta course.lms >}} |
+| Announcements and deadlines | {{< meta course.lms >}} |
+| Handing in practical work | {{< meta course.lms >}} |
 
 ## Getting help
 
