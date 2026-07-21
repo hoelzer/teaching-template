@@ -31,9 +31,15 @@ rejected for that reason.
 ```
 teaching-hub          public    public front door             teaching.hoelzer.science
 teaching-template     public    this repo — course skeleton   teaching-template.hoelzer.science (401)
-<module>              private   actual courses                <module>.hoelzer.science (401)
-<shared-prerequisite> public    material every module needs   (planned)
+course-<module>       private   actual courses                course-<module>.hoelzer.science (401)
+<shared-prerequisite> public    material every module needs   (planned, e.g. linux.hoelzer.science)
 ```
+
+**Naming rule.** The `course-` prefix marks a password-protected enrolled
+module; public sites take bare labels. Repo name, Pages project name and
+subdomain label are always identical. See README, "Naming", for why — in short,
+first-level labels are a scarce permanent namespace, and nesting under
+`teaching.` would need paid Advanced Certificate Manager.
 
 The fourth kind exists because cherry-pick sync moves **infrastructure only** — content
 copied into each module drifts. Material every module needs and none owns (first case: a

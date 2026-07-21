@@ -122,10 +122,25 @@ from private repositories.
 identical, so there is nothing to map:
 
 ```
-repo:    hoelzer-science/bioinformatics
-project: bioinformatics
-domain:  bioinformatics.hoelzer.science
+repo:    hoelzer-science/course-bioinformatics
+project: course-bioinformatics
+domain:  course-bioinformatics.hoelzer.science
 ```
+
+The **`course-` prefix marks a password-protected module**. Public sites — the
+teaching hub, a research group page, standalone open resources — take bare
+labels (`teaching`, `bioinformatics`, `linux`). Two reasons this matters:
+
+- The domain's first-level labels are a scarce, permanent namespace and should
+  belong to durable identities, not to individual modules. A course called
+  `bioinformatics` blocks that label for a research group forever.
+- Nesting instead (`bioinformatics.teaching.example.com`) is not available on
+  the free tier: Universal SSL covers the apex and `*.example.com`, but not
+  `*.teaching.example.com`. Everything must live one level deep, so a prefix is
+  the only disambiguation there is.
+
+Rename before the first semester or not at all — afterwards it means bookmarks,
+LMS links and a certificate reissue.
 
 **1. Create the Pages project.** It must exist before the first CI deploy.
 
@@ -235,11 +250,11 @@ directions:
 One-time setup, from inside the template repo:
 
 ```bash
-git remote add bioinformatics ~/git/bioinformatics   # adjust the path
-git fetch bioinformatics
-git log bioinformatics/main --oneline                # find the commit to take
+git remote add course-bioinformatics ~/git/course-bioinformatics   # adjust path
+git fetch course-bioinformatics
+git log course-bioinformatics/main --oneline         # find the commit to take
 git cherry-pick <sha>
-pixi run check                                        # confirm it still builds
+pixi run check                                       # confirm it still builds
 ```
 
 ### The discipline that makes this painless
