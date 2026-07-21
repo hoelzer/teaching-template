@@ -1,18 +1,26 @@
 # Single source of truth for everything that changes between semesters.
 # Referenced from .qmd files as e.g. {{< meta course.semester >}} so that
 # rolling the course over to a new term is a one-file edit.
+#
+# In the template these are PLACEHOLDERS. A module repo overwrites them with
+# its real values -- and because module repos are private, the real course
+# code, institution and term never appear in a public repository.
 
 course:
-  title: "Teaching Template"
-  audience: "BSc Semester 5"
-  code: "MT.1.257"
-  semester: "Winter 2026/27"
-  start-date: "2026-10-05"
+  title: "Course Title"
+  audience: "BSc Semester N"
+  code: "MODULE.CODE"
+  semester: "Winter 20XX/XX"
+  start-date: "20XX-10-01"
   sws-lecture: 2
   sws-practical: 2
-  institution: "University of Applied Sciences Jena"
-  instructor: "Martin Hölzer"
-  contact: "hoelzer.martin@gmail.com"
+  institution: "Your Institution"
+  instructor: "Your Name"
+  contact: "you@example.org"
+  # Name of the learning management system used alongside the course site --
+  # it carries the login, announcements and hand-ins. Referenced in guide.qmd,
+  # so set it to whatever your institution runs (e.g. "Moodle", "Ilias").
+  lms: "the course learning platform"
   # Kept for the record. Not rendered as a link anywhere -- guide.qmd refers to
-  # Moodle in plain text, so an unset value here cannot produce a broken link.
-  lms-url: "TODO — Moodle course URL"
+  # the LMS in plain text, so an unset value here cannot produce a broken link.
+  lms-url: "TODO — LMS course URL"
