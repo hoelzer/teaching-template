@@ -1,5 +1,23 @@
 # CLAUDE.md — teaching-template
 
+> ## ⚠ STOP if this is a module repository
+>
+> This file describes the **public template**. If you are reading it in a repo
+> created from the template — anything named `course-*` — it is the wrong file
+> and its publishing constraint is **inverted**: it says the repository is
+> public and must contain no real institution, module code or term, which in a
+> private module is exactly backwards and would tell you to delete that
+> module's course configuration.
+>
+> Fix it before doing anything else:
+>
+> ```bash
+> git rm CLAUDE.md && git mv CLAUDE-module.md CLAUDE.md
+> # then replace the <module> / <MODULE> placeholders
+> ```
+>
+> If the repo you are in is `teaching-template` itself, carry on.
+
 Permanent onboarding for this repository. Changes only when project knowledge
 changes. Current working state lives in `NEXT.md`; session history in
 `docs/sessions/`.

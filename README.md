@@ -118,6 +118,19 @@ own site. The free tier allows 100 projects.
 Organization-level secrets do not help: on GitHub Free they are not readable
 from private repositories.
 
+**0. First commit in a new module: swap in the module's `CLAUDE.md`.**
+
+```bash
+git rm CLAUDE.md && git mv CLAUDE-module.md CLAUDE.md
+# then replace the <module> / <MODULE> placeholders, and fill in _course.yml
+```
+
+Do this before anything else. The template's own `CLAUDE.md` states that the
+repository is public and must contain no real institution, module code or term.
+That is correct upstream and **inverted** in a module: a private module repo is
+precisely where the real values belong. Left in place it instructs the next
+reader — human or agent — to strip the course configuration back out.
+
 **Naming.** Keep repository name, Pages project name and subdomain label
 identical, so there is nothing to map:
 
